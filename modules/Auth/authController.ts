@@ -49,7 +49,7 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { identifier } = req.body;
+    const { identifier, password } = req.body;
 
     const user = await UserModel.findOne({
       $or: [{ username: identifier }, { email: identifier }],
@@ -61,10 +61,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       message: "no user exists with this identifier",
     });
 
-    const isPasswordCorrect = comparePassword(
-      req.body?.password,
-      user?.password!
-    );
+    const isPasswordCorrect = comparePassword(password, user?.password!);
 
     checkFalsyResult({
       result: isPasswordCorrect,
