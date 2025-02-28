@@ -6,7 +6,7 @@ const swaggerConfigs = (app: any) => {
     swaggerDefinition: {
       openapi: "3.0.1",
       info: {
-        title: "Daily Doings APIs",
+        title: "Daily Doings APIs 📊",
         description: "Daily Doings project API documentation.",
         version: "1.0.0",
       },

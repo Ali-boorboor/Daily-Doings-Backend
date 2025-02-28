@@ -1,6 +1,8 @@
 import errorCatcher from "#/middlewares/errorCatcher";
 import notFound from "#/middlewares/notFound";
 import app from "#/app.ts";
+import "#m/Priorities/PriorityModel.ts";
+import "#m/Statuses/StatusModel.ts";
 import "#c/DB.ts";
 
 // * global middlewares to catch errors and not found routes

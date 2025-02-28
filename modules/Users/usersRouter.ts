@@ -19,6 +19,40 @@ const usersRouter: any = express.Router();
 
 /**
  * @swagger
+ * /user/forgot-password:
+ *   post:
+ *     summary: Forgot password
+ *     description: Will send the new password to user's email
+ *     tags:
+ *       - Users 👤
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               identifier:
+ *                 type: string
+ *                 description: The user's identifier (email or username)
+ *     responses:
+ *       200:
+ *         description: Email sent successfully
+ *       422:
+ *         description: Invalid input data
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal Server Error - Something went wrong
+ */
+usersRouter.post(
+  "/forgot-password",
+  validateReqBody(forgotPassValidations),
+  forgotPassword
+);
+
+/**
+ * @swagger
  * /user/change-password:
  *   put:
  *     summary: Change user password
@@ -144,40 +178,6 @@ usersRouter.put(
   authGuard,
   validateReqBody(changeCoverValidations),
   changeCover
-);
-
-/**
- * @swagger
- * /user/forgot-password:
- *   post:
- *     summary: Forgot password
- *     description: Will send the new password to user's email
- *     tags:
- *       - Users 👤
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               identifier:
- *                 type: string
- *                 description: The user's identifier (email or username)
- *     responses:
- *       200:
- *         description: Email sent successfully
- *       422:
- *         description: Invalid input data
- *       404:
- *         description: User not found
- *       500:
- *         description: Internal Server Error - Something went wrong
- */
-usersRouter.post(
-  "/forgot-password",
-  validateReqBody(forgotPassValidations),
-  forgotPassword
 );
 
 export default usersRouter;
