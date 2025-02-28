@@ -36,6 +36,7 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
     const result = details.toObject();
 
     Reflect.deleteProperty(result, "password");
+    Reflect.deleteProperty(result, "__v");
 
     res.status(201).json({ message: "user signed up successfully", result });
   } catch (error) {
@@ -101,10 +102,18 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
       process.env.SECRET_ACCESS_TOKEN!
     );
 
+    const userDatas = await UserModel.findById(decodedToken?._id).lean();
+
+    checkFalsyResult({
+      result: userDatas,
+      status: 404,
+      message: "no user exists with this id",
+    });
+
     res.json({
       message: "ok",
-      id: decodedToken?._id,
       username: decodedToken?.username,
+      cover: process.env.FILE_ADDRESS + `/${userDatas?.cover}`,
     });
   } catch (error: any) {
     next({ status: 401, message: error?.message });

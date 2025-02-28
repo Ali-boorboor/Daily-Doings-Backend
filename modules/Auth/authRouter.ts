@@ -100,6 +100,8 @@ authRouter.post("/login", validateReqBody(loginValidations), login);
  *         description: Invalid input data
  *       401:
  *         description: Access denied
+ *       404:
+ *         description: User not found
  *       500:
  *         description: Internal Server Error - Something went wrong
  */

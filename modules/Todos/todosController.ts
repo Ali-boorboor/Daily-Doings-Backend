@@ -5,13 +5,15 @@ import type { NextFunction, Request, Response } from "express";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { priority, folder } = req.body;
+
     validateMongoID({
-      id: req.body?.priority,
+      id: priority,
       field: "priority",
     });
 
     validateMongoID({
-      id: req.body?.folder,
+      id: folder,
       field: "folder",
     });
 
@@ -23,6 +25,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
     const result = details.toObject();
 
     Reflect.deleteProperty(result, "__v");
+    Reflect.deleteProperty(result, "user");
 
     res.status(201).send({ message: "todo added successfully", result });
   } catch (error) {
@@ -77,6 +80,7 @@ const getOne = async (req: Request, res: Response, next: NextFunction) => {
 
 const edit = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const { priority, folder, status } = req.body;
     const { todoID } = req.params;
 
     validateMongoID({
@@ -85,17 +89,17 @@ const edit = async (req: Request, res: Response, next: NextFunction) => {
     });
 
     validateMongoID({
-      id: req.body?.priority,
+      id: priority,
       field: "priority",
     });
 
     validateMongoID({
-      id: req.body?.folder,
+      id: folder,
       field: "folder",
     });
 
     validateMongoID({
-      id: req.body?.status,
+      id: status,
       field: "status",
     });
 
