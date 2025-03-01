@@ -15,6 +15,9 @@ const signupValidations = new Schema(
       required: true,
       message: "Invalid email",
     },
+    cover: {
+      required: false,
+    },
     password: {
       type: String,
       required: true,
@@ -110,6 +113,9 @@ const changeCoverValidations = new Schema(
           required: true,
         },
       },
+    },
+    cover: {
+      required: false,
     },
     password: {
       type: String,

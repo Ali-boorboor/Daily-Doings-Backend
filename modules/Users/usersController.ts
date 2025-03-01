@@ -83,6 +83,14 @@ const changeUsername = async (
       username: newUsername,
     }).lean();
 
+    res.cookie("username", newUsername, {
+      maxAge: 864000000,
+      httpOnly: false,
+      secure: true,
+      signed: false,
+      sameSite: "strict",
+    });
+
     res.json({ message: "username changed successfully" });
   } catch (error) {
     next(error);
@@ -121,6 +129,14 @@ const changeCover = async (req: Request, res: Response, next: NextFunction) => {
     );
 
     await UserModel.findByIdAndUpdate(req.body?.user?._id, { cover });
+
+    res.cookie("cover", process.env.FILE_ADDRESS + `/${cover}`, {
+      maxAge: 864000000,
+      httpOnly: false,
+      secure: true,
+      signed: false,
+      sameSite: "strict",
+    });
 
     res.json({ message: "cover changed successfully" });
   } catch (error) {

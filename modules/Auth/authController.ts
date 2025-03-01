@@ -84,6 +84,22 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       sameSite: "strict",
     });
 
+    res.cookie("cover", process.env.FILE_ADDRESS + `/${user?.cover}`, {
+      maxAge: 864000000,
+      httpOnly: false,
+      secure: true,
+      signed: false,
+      sameSite: "strict",
+    });
+
+    res.cookie("username", user?.username, {
+      maxAge: 864000000,
+      httpOnly: false,
+      secure: true,
+      signed: false,
+      sameSite: "strict",
+    });
+
     res.json({ message: "logged in successfully" });
   } catch (error) {
     next(error);
@@ -111,11 +127,7 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
       message: "no user exists with this id",
     });
 
-    res.json({
-      message: "ok",
-      username: decodedToken?.username,
-      cover: process.env.FILE_ADDRESS + `/${userDatas?.cover}`,
-    });
+    res.json({ message: "ok" });
   } catch (error: any) {
     next({ status: 401, message: error?.message });
   }
@@ -124,6 +136,8 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
 const logout = async (req: Request, res: Response, next: NextFunction) => {
   try {
     res.clearCookie("accessToken");
+    res.clearCookie("username");
+    res.clearCookie("cover");
 
     res.json({ message: "logged out successfully" });
   } catch (error) {
