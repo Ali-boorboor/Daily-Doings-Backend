@@ -36,6 +36,7 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
     const result = details.toObject();
 
     Reflect.deleteProperty(result, "password");
+    Reflect.deleteProperty(result, "_id");
     Reflect.deleteProperty(result, "__v");
 
     res.status(201).json({ message: "user signed up successfully", result });
@@ -120,4 +121,14 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { signup, login, auth };
+const logout = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.clearCookie("accessToken");
+
+    res.json({ message: "logged out successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { signup, login, auth, logout };

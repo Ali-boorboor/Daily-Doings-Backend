@@ -1,8 +1,9 @@
 import express from "express";
 import uploader from "#/middlewares/uploader";
-import { login, signup, auth } from "#m/Auth/authController";
-import { validateReqBody } from "#/middlewares/validateRequest";
+import authGuard from "#/middlewares/authGuard";
 import { loginValidations, signupValidations } from "#v/usersValidations";
+import { login, signup, auth, logout } from "#m/Auth/authController";
+import { validateReqBody } from "#/middlewares/validateRequest";
 
 const authRouter: any = express.Router();
 
@@ -98,13 +99,33 @@ authRouter.post("/login", validateReqBody(loginValidations), login);
  *         description: Ok
  *       422:
  *         description: Invalid input data
- *       401:
- *         description: Access denied
  *       404:
  *         description: User not found
  *       500:
  *         description: Internal Server Error - Something went wrong
  */
 authRouter.post("/auth", auth);
+
+/**
+ * @swagger
+ * /logout:
+ *   post:
+ *     summary: Logout
+ *     description: Logout from account
+ *     tags:
+ *       - Auth 🔒
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Logged out successfully
+ *       422:
+ *         description: Invalid input data
+ *       401:
+ *         description: Access denied
+ *       500:
+ *         description: Internal Server Error - Something went wrong
+ */
+authRouter.post("/logout", authGuard, logout);
 
 export default authRouter;
