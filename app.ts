@@ -8,12 +8,15 @@ import cookieParser from "cookie-parser";
 import express from "express";
 import helmet from "helmet";
 import path from "path";
+import cors from "cors";
 
 // ^ app.ts file exist to handle routes and some middlewares
 const app = express();
 
 // * swagger configs
 swaggerConfigs(app);
+// ! cors
+app.use(cors());
 
 // * global middlewares
 app.use(cookieParser(process.env.SECRET_COOKIE));
