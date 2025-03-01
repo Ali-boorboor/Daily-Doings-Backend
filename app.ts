@@ -16,7 +16,12 @@ const app = express();
 // * swagger configs
 swaggerConfigs(app);
 // ! cors
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:20000",
+    credentials: true,
+  })
+);
 
 // * global middlewares
 app.use(cookieParser(process.env.SECRET_COOKIE));
