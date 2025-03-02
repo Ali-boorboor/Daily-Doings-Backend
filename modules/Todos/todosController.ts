@@ -78,6 +78,25 @@ const getOne = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const getRecent = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const todos = await TodoModel.find({ user: req.body?.user?._id })
+      .populate("status", "-__v")
+      .populate("folder", "-__v")
+      .populate("priority", "-__v")
+      .select("-__v -user")
+      .sort({ _id: -1 })
+      .limit(3)
+      .lean();
+
+    checkFalsyResult({ result: todos });
+
+    res.json({ message: "recent todos", todos });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const edit = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { priority, folder, status } = req.body;
@@ -147,4 +166,4 @@ const remove = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { create, getAll, getOne, edit, remove };
+export { create, getAll, getOne, getRecent, edit, remove };
