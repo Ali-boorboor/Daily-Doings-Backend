@@ -97,6 +97,62 @@ const getRecent = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const getTodosOverview = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const allTodosCount = await TodoModel.countDocuments({
+      user: req.body?.user?._id,
+    }).lean();
+
+    const doneTodosCount = await TodoModel.countDocuments({
+      user: req.body?.user?._id,
+      status: "67bc63eca74538ab87c5a922",
+    }).lean();
+
+    const notDoneTodosCount = await TodoModel.countDocuments({
+      user: req.body?.user?._id,
+      status: "67bc643ca74538ab87c5a923",
+    }).lean();
+
+    const awaitTodosCount = await TodoModel.countDocuments({
+      user: req.body?.user?._id,
+      status: "67bc6447a74538ab87c5a924",
+    }).lean();
+
+    const inProgressTodosCount = await TodoModel.countDocuments({
+      user: req.body?.user?._id,
+      status: "67bc6464a74538ab87c5a925",
+    }).lean();
+
+    res.json({
+      message: "todos count based on their status",
+      allTodosCount,
+      doneTodos: {
+        doneTodosCount,
+        doneTodosPercent: (doneTodosCount / allTodosCount) * 100 || 0,
+      },
+      notDoneTodos: {
+        notDoneTodosCount,
+        notDoneTodosPercent: (notDoneTodosCount / allTodosCount) * 100 || 0,
+      },
+      awaitTodos: {
+        awaitTodosCount,
+        awaitTodosPercent: (awaitTodosCount / allTodosCount) * 100 || 0,
+      },
+      inProgressTodos: {
+        inProgressTodosCount,
+        inProgressTodosPercent:
+          (inProgressTodosCount / allTodosCount) * 100 || 0,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const edit = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { priority, folder, status } = req.body;
@@ -166,4 +222,4 @@ const remove = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { create, getAll, getOne, getRecent, edit, remove };
+export { create, getAll, getOne, getRecent, getTodosOverview, edit, remove };

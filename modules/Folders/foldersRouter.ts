@@ -6,6 +6,8 @@ import {
   create,
   getAllFolders,
   getOneFolderTodos,
+  getFoldersOverview,
+  getOneFolderOverview,
   edit,
   remove,
 } from "#m/Folders/foldersController.ts";
@@ -65,6 +67,50 @@ foldersRouter
   .route("/")
   .post(validateReqBody(validation), create)
   .get(getAllFolders);
+
+/**
+ * @swagger
+ * /folder/get-overview:
+ *   get:
+ *     summary: Get Overview of todos based on their folder and status
+ *     description: Private Route Login To Access
+ *     tags:
+ *       - Folders 📁
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Todos list
+ *       500:
+ *         description: Internal Server Error - Something went wrong
+ */
+foldersRouter.route("/get-overview").get(authGuard, getFoldersOverview);
+
+/**
+ * @swagger
+ * /folder/get-one-overview/{folderID}:
+ *   get:
+ *     summary: Get Overview of one folder based on its todos with done status
+ *     description: Private Route Login To Access
+ *     parameters:
+ *     - name: folderID
+ *       in: path
+ *       description: The folder mongo ID
+ *       required: true
+ *       type: string
+ *     tags:
+ *       - Folders 📁
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Todos list
+ *       500:
+ *         description: Internal Server Error - Something went wrong
+ */
+foldersRouter
+  .route("/get-one-overview/:folderID")
+  .get(authGuard, getOneFolderOverview);
 
 /**
  * @swagger

@@ -7,6 +7,7 @@ import {
   getAll,
   getOne,
   getRecent,
+  getTodosOverview,
   edit,
   remove,
 } from "#m/Todos/todosController.ts";
@@ -107,6 +108,24 @@ todosRouter.route("/get-all").get(authGuard, getAll);
  *         description: Internal Server Error - Something went wrong
  */
 todosRouter.route("/get-recent").get(authGuard, getRecent);
+
+/**
+ * @swagger
+ * /todo/get-overview:
+ *   get:
+ *     summary: Get Overview of todos based on their status
+ *     description: Private Route Login To Access
+ *     tags:
+ *       - Todos 📃
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Todos list
+ *       500:
+ *         description: Internal Server Error - Something went wrong
+ */
+todosRouter.route("/get-overview").get(authGuard, getTodosOverview);
 
 /**
  * @swagger

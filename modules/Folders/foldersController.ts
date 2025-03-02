@@ -86,6 +86,111 @@ const getOneFolderTodos = async (
   }
 };
 
+const getFoldersOverview = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const allFolders = await FolderModel.find({
+      user: req.body?.user?._id,
+    }).lean();
+
+    const allTodos = await TodoModel.find({
+      user: req.body?.user?._id,
+    }).lean();
+
+    let foldersOverview: {}[] = [];
+
+    allFolders.forEach((folder) => {
+      let doneTodos = 0;
+
+      const folderTodos = allTodos.filter(
+        (todo) => String(todo.folder) === String(folder._id)
+      );
+
+      folderTodos.forEach((todo) => {
+        switch (String(todo?.status)) {
+          case "67bc63eca74538ab87c5a922": {
+            ++doneTodos;
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+      });
+
+      foldersOverview.push({
+        name: folder.name,
+        doneTodos,
+      });
+    });
+
+    res.json({
+      message: "todos list based on their folder and status",
+      foldersOverview,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getOneFolderOverview = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { folderID } = req.params;
+
+    validateMongoID({
+      id: folderID,
+      field: "folderID param",
+    });
+
+    const allTodosCount = await TodoModel.countDocuments({
+      user: req.body?.user?._id,
+      folder: folderID,
+    }).lean();
+
+    const doneTodosCount = await TodoModel.countDocuments({
+      status: "67bc63eca74538ab87c5a922",
+      user: req.body?.user?._id,
+      folder: folderID,
+    }).lean();
+
+    const notDoneTodosCount = await TodoModel.countDocuments({
+      status: "67bc643ca74538ab87c5a923",
+      user: req.body?.user?._id,
+      folder: folderID,
+    }).lean();
+
+    const awaitTodosCount = await TodoModel.countDocuments({
+      status: "67bc6447a74538ab87c5a924",
+      user: req.body?.user?._id,
+      folder: folderID,
+    }).lean();
+
+    const inProgressTodosCount = await TodoModel.countDocuments({
+      status: "67bc6464a74538ab87c5a925",
+      user: req.body?.user?._id,
+      folder: folderID,
+    }).lean();
+
+    res.json({
+      message: "todos list based on their folder and with done status",
+      allTodosCount,
+      doneTodosCount,
+      notDoneTodosCount,
+      awaitTodosCount,
+      inProgressTodosCount,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const edit = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { folderID } = req.params;
@@ -135,4 +240,12 @@ const remove = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { create, getAllFolders, getOneFolderTodos, edit, remove };
+export {
+  create,
+  getAllFolders,
+  getOneFolderTodos,
+  getFoldersOverview,
+  getOneFolderOverview,
+  edit,
+  remove,
+};

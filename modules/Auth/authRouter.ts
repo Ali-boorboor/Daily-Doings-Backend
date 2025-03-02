@@ -88,26 +88,6 @@ authRouter.post("/login", validateReqBody(loginValidations), login);
 
 /**
  * @swagger
- * /auth:
- *   post:
- *     summary: Authentication
- *     description: User authentication
- *     tags:
- *       - Auth 🔒
- *     responses:
- *       200:
- *         description: Ok
- *       422:
- *         description: Invalid input data
- *       404:
- *         description: User not found
- *       500:
- *         description: Internal Server Error - Something went wrong
- */
-authRouter.post("/auth", auth);
-
-/**
- * @swagger
  * /logout:
  *   post:
  *     summary: Logout
@@ -127,5 +107,25 @@ authRouter.post("/auth", auth);
  *         description: Internal Server Error - Something went wrong
  */
 authRouter.post("/logout", authGuard, logout);
+
+/**
+ * @swagger
+ * /auth:
+ *   get:
+ *     summary: Authentication
+ *     description: User authentication
+ *     tags:
+ *       - Auth 🔒
+ *     responses:
+ *       200:
+ *         description: Ok
+ *       422:
+ *         description: Invalid input data
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal Server Error - Something went wrong
+ */
+authRouter.get("/auth", auth);
 
 export default authRouter;
