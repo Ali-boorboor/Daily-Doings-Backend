@@ -75,28 +75,33 @@ const removeAll = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const editOne = async (req: Request, res: Response, next: NextFunction) => {
+const editSome = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { todoID } = req.params;
+    const { checked } = req.body;
 
-    validateMongoID({
-      id: todoID,
-      field: "todoID param",
-    });
+    await TodayTodoModel.updateMany(
+      {
+        user: req?.body?.user?._id,
+        _id: { $in: checked },
+        status: "67bc643ca74538ab87c5a923",
+      },
+      {
+        status: "67bc63eca74538ab87c5a922",
+      }
+    ).lean();
 
-    const todoDetails = await TodayTodoModel.findById(todoID).lean();
+    await TodayTodoModel.updateMany(
+      {
+        user: req?.body?.user?._id,
+        _id: { $nin: checked },
+        status: "67bc63eca74538ab87c5a922",
+      },
+      {
+        status: "67bc643ca74538ab87c5a923",
+      }
+    ).lean();
 
-    checkFalsyResult({
-      result: todoDetails,
-      status: 404,
-      message: "todo not found",
-    });
-
-    await TodayTodoModel.findByIdAndUpdate(todoID, {
-      status: "67bc63eca74538ab87c5a922",
-    });
-
-    res.json({ message: "todo status changed to done" });
+    res.json({ message: "todos status changed" });
   } catch (error) {
     next(error);
   }
@@ -127,4 +132,4 @@ const removeOne = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { create, getAll, editAll, removeAll, editOne, removeOne };
+export { create, getAll, editAll, removeAll, editSome, removeOne };

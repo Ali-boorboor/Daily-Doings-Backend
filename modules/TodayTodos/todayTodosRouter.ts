@@ -1,13 +1,13 @@
 import express from "express";
 import authGuard from "#/middlewares/authGuard";
 import { validateReqBody } from "#/middlewares/validateRequest";
-import { postValidations } from "#v/todayTodosValidations.ts";
+import { postValidations, putValidations } from "#v/todayTodosValidations.ts";
 import {
   create,
   getAll,
   editAll,
   removeAll,
-  editOne,
+  editSome,
   removeOne,
 } from "#m/TodayTodos/todayTodosController.ts";
 
@@ -92,20 +92,26 @@ todayTodosRouter
 
 /**
  * @swagger
- * /today-todo/{todoID}:
+ * /today-todo/check:
  *   put:
- *     parameters:
- *     - name: todoID
- *       in: path
- *       description: The todo mongo ID
- *       required: true
- *       type: string
  *     summary: Edit one today todo
  *     description: Private Route Login To Access
  *     tags:
  *       - Today Todos 📃
  *     security:
  *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               checked:
+ *                 type: array
+ *                 items:
+ *                    type: string
+ *                 description: The Todo's checked ids array
  *     responses:
  *       200:
  *         description: Todo edited successfully
@@ -115,6 +121,17 @@ todayTodosRouter
  *         description: Todo Not found
  *       500:
  *         description: Internal Server Error - Something went wrong
+ */
+todayTodosRouter.put(
+  "/check",
+  authGuard,
+  validateReqBody(putValidations),
+  editSome
+);
+
+/**
+ * @swagger
+ * /today-todo/{todoID}:
  *   delete:
  *     parameters:
  *     - name: todoID
@@ -138,10 +155,6 @@ todayTodosRouter
  *       500:
  *         description: Internal Server Error - Something went wrong
  */
-todayTodosRouter
-  .use(authGuard)
-  .route("/:todoID")
-  .put(editOne)
-  .delete(removeOne);
+todayTodosRouter.delete("/:todoID", authGuard, removeOne);
 
 export default todayTodosRouter;

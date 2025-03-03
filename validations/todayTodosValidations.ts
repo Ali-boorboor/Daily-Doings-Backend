@@ -28,4 +28,27 @@ const postValidations = new Schema(
   { strict: true }
 );
 
-export { postValidations };
+const putValidations = new Schema(
+  {
+    user: {
+      type: Object,
+      schema: {
+        _id: {
+          type: String,
+          required: true,
+        },
+        username: {
+          type: String,
+          required: true,
+        },
+      },
+    },
+    checked: {
+      type: Array,
+      required: true,
+    },
+  },
+  { strict: true }
+);
+
+export { postValidations, putValidations };
