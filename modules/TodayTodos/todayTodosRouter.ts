@@ -5,8 +5,6 @@ import { postValidations, putValidations } from "#v/todayTodosValidations.ts";
 import {
   create,
   getAll,
-  editAll,
-  removeAll,
   editSome,
   removeOne,
 } from "#m/TodayTodos/todayTodosController.ts";
@@ -57,44 +55,18 @@ const todayTodosRouter: any = express.Router();
  *         description: No todo exists
  *       500:
  *         description: Internal Server Error - Something went wrong
- *   put:
- *     summary: Edit all today todos
- *     description: Private Route Login To Access
- *     tags:
- *       - Today Todos 📃
- *     security:
- *       - cookieAuth: []
- *     responses:
- *       200:
- *         description: Todo edited successfully
- *       500:
- *         description: Internal Server Error - Something went wrong
- *   delete:
- *     summary: Remove all today todos
- *     description: Private Route Login To Access
- *     tags:
- *       - Today Todos 📃
- *     security:
- *       - cookieAuth: []
- *     responses:
- *       200:
- *         description: Todos removed successfully
- *       500:
- *         description: Internal Server Error - Something went wrong
  */
 todayTodosRouter
   .use(authGuard)
   .route("/")
   .post(validateReqBody(postValidations), create)
-  .get(getAll)
-  .put(editAll)
-  .delete(removeAll);
+  .get(getAll);
 
 /**
  * @swagger
  * /today-todo/check:
  *   put:
- *     summary: Edit one today todo
+ *     summary: Edit some today todos
  *     description: Private Route Login To Access
  *     tags:
  *       - Today Todos 📃

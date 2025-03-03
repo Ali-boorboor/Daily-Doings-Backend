@@ -46,58 +46,24 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const editAll = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    await TodayTodoModel.updateMany(
-      {
-        user: req.body?.user?._id,
-      },
-      {
-        status: "67bc63eca74538ab87c5a922",
-      }
-    );
-
-    res.json({ message: "all todos status changed to done" });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const removeAll = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    await TodayTodoModel.deleteMany({
-      user: req.body?.user?._id,
-    });
-
-    res.json({ message: "all todos removed successfully" });
-  } catch (error) {
-    next(error);
-  }
-};
-
 const editSome = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { checked } = req.body;
 
     await TodayTodoModel.updateMany(
+      { user: req.body?.user?._id },
       {
-        user: req?.body?.user?._id,
-        _id: { $in: checked },
         status: "67bc643ca74538ab87c5a923",
-      },
-      {
-        status: "67bc63eca74538ab87c5a922",
       }
     ).lean();
 
     await TodayTodoModel.updateMany(
       {
         user: req?.body?.user?._id,
-        _id: { $nin: checked },
-        status: "67bc63eca74538ab87c5a922",
+        _id: { $in: checked },
       },
       {
-        status: "67bc643ca74538ab87c5a923",
+        status: "67bc63eca74538ab87c5a922",
       }
     ).lean();
 
@@ -132,4 +98,4 @@ const removeOne = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { create, getAll, editAll, removeAll, editSome, removeOne };
+export { create, getAll, editSome, removeOne };
