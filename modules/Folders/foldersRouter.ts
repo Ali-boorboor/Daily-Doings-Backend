@@ -89,12 +89,6 @@ foldersRouter.route("/get-overview").get(authGuard, getFoldersOverview);
  * @swagger
  * /folder/{folderID}:
  *   get:
- *     parameters:
- *     - name: folderID
- *       in: path
- *       description: The folder mongo ID
- *       required: true
- *       type: string
  *     summary: Get one folder todos
  *     description: Private Route Login To Access
  *     tags:
@@ -102,6 +96,11 @@ foldersRouter.route("/get-overview").get(authGuard, getFoldersOverview);
  *     security:
  *       - cookieAuth: []
  *     parameters:
+ *     - name: folderID
+ *       in: path
+ *       description: The folder mongo ID
+ *       required: true
+ *       type: string
  *     - name: page
  *       in: query
  *       description: The page number
