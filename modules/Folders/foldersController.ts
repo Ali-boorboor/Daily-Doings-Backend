@@ -36,15 +36,31 @@ const getAllFolders = async (
   next: NextFunction
 ) => {
   try {
+    const page = req?.query?.page || 1;
+    const limit = req?.query?.limit || 10;
+
     const folders = await FolderModel.find({
       user: req.body?.user?._id,
     })
       .select("-user -__v")
+      .skip((+page - 1) * +limit)
+      .limit(+limit)
       .lean();
+
+    const totalDocuments = await FolderModel.countDocuments({
+      user: req.body?.user?._id,
+    }).lean();
 
     checkFalsyResult({ result: folders });
 
-    res.json({ message: "all folders list", folders });
+    res.json({
+      message: "all folders list",
+      page: +page,
+      limit: +limit,
+      totalDocuments,
+      totalPages: Math.ceil(totalDocuments / +limit),
+      folders,
+    });
   } catch (error) {
     next(error);
   }

@@ -30,17 +30,33 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const page = req?.query?.page || 1;
+    const limit = req?.query?.limit || 10;
+
     const todayTodos = await TodayTodoModel.find({
       user: req.body?.user?._id,
     })
       .populate("priority", "-__v")
       .populate("status", "-__v")
       .select("-user -__v")
+      .skip((+page - 1) * +limit)
+      .limit(+limit)
       .lean();
+
+    const totalDocuments = await TodayTodoModel.countDocuments({
+      user: req.body?.user?._id,
+    }).lean();
 
     checkFalsyResult({ result: todayTodos });
 
-    res.json({ message: "all todos list", todayTodos });
+    res.json({
+      message: "all todos list",
+      page: +page,
+      limit: +limit,
+      totalDocuments,
+      totalPages: Math.ceil(totalDocuments / +limit),
+      todayTodos,
+    });
   } catch (error) {
     next(error);
   }

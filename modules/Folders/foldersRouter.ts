@@ -51,6 +51,17 @@ const foldersRouter: any = express.Router();
  *       - Folders 📁
  *     security:
  *       - cookieAuth: []
+ *     parameters:
+ *     - name: page
+ *       in: query
+ *       description: The page number
+ *       required: false
+ *       type: number
+ *     - name: limit
+ *       in: query
+ *       description: The limit per page number
+ *       required: false
+ *       type: number
  *     responses:
  *       200:
  *         description: All folders list
