@@ -83,8 +83,18 @@ todosRouter
  *     - name: subject
  *       in: query
  *       description: The todo subject
- *       required: false
+ *       required: true
  *       type: string
+ *     - name: page
+ *       in: query
+ *       description: The page number
+ *       required: false
+ *       type: number
+ *     - name: limit
+ *       in: query
+ *       description: The limit per page number
+ *       required: false
+ *       type: number
  *     responses:
  *       200:
  *         description: Todos list

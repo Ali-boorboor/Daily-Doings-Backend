@@ -36,19 +36,44 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 const search = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { subject } = req.query;
+    const page = req?.query?.page || 1;
+    const limit = req?.query?.limit || 10;
 
     if (!subject?.length) {
       next({ status: 422, message: "subject is required in request query" });
     }
 
+    const allSearchResult = await TodoModel.find({
+      subject: { $regex: subject, $options: "i" },
+      user: req.body?.user?._id,
+    })
+      .select("-__v -user")
+      .lean();
+
     const searchResult = await TodoModel.find({
       subject: { $regex: subject, $options: "i" },
       user: req.body?.user?._id,
-    });
+    })
+      .populate("status", "-__v")
+      .populate("folder", "-__v")
+      .populate("priority", "-__v")
+      .select("-__v -user")
+      .skip((+page - 1) * +limit)
+      .limit(+limit)
+      .lean();
+
+    const totalDocuments = allSearchResult.length;
 
     checkFalsyResult({ result: searchResult });
 
-    res.send({ message: "search result", searchResult });
+    res.send({
+      message: "search result",
+      page: +page,
+      limit: +limit,
+      totalDocuments,
+      totalPages: Math.ceil(totalDocuments / +limit),
+      searchResult,
+    });
   } catch (error) {
     next(error);
   }
