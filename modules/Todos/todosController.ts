@@ -35,16 +35,32 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const page = req?.query?.page || 1;
+    const limit = req?.query?.limit || 10;
+
     const todos = await TodoModel.find({ user: req.body?.user?._id })
       .populate("status", "-__v")
       .populate("folder", "-__v")
       .populate("priority", "-__v")
       .select("-__v -user")
+      .skip((+page - 1) * +limit)
+      .limit(+limit)
       .lean();
+
+    const totalDocuments = await TodoModel.countDocuments({
+      user: req.body?.user?._id,
+    }).lean();
 
     checkFalsyResult({ result: todos });
 
-    res.json({ message: "all todos list", todos });
+    res.json({
+      message: "all todos list",
+      page: +page,
+      limit: +limit,
+      totalDocuments,
+      totalPages: Math.ceil(totalDocuments / +limit),
+      todos,
+    });
   } catch (error) {
     next(error);
   }
