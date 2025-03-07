@@ -148,20 +148,23 @@ const getTodosOverview = async (
       allTodosCount,
       doneTodos: {
         doneTodosCount,
-        doneTodosPercent: (doneTodosCount / allTodosCount) * 100 || 0,
+        doneTodosPercent:
+          Math.floor((doneTodosCount / allTodosCount) * 100) || 0,
       },
       notDoneTodos: {
         notDoneTodosCount,
-        notDoneTodosPercent: (notDoneTodosCount / allTodosCount) * 100 || 0,
+        notDoneTodosPercent:
+          Math.floor((notDoneTodosCount / allTodosCount) * 100) || 0,
       },
       awaitTodos: {
         awaitTodosCount,
-        awaitTodosPercent: (awaitTodosCount / allTodosCount) * 100 || 0,
+        awaitTodosPercent:
+          Math.floor((awaitTodosCount / allTodosCount) * 100) || 0,
       },
       inProgressTodos: {
         inProgressTodosCount,
         inProgressTodosPercent:
-          (inProgressTodosCount / allTodosCount) * 100 || 0,
+          Math.floor((inProgressTodosCount / allTodosCount) * 100) || 0,
       },
     });
   } catch (error) {
