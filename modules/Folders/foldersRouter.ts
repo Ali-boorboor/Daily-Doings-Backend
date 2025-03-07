@@ -101,6 +101,17 @@ foldersRouter.route("/get-overview").get(authGuard, getFoldersOverview);
  *       - Folders 📁
  *     security:
  *       - cookieAuth: []
+ *     parameters:
+ *     - name: page
+ *       in: query
+ *       description: The page number
+ *       required: false
+ *       type: number
+ *     - name: limit
+ *       in: query
+ *       description: The limit per page number
+ *       required: false
+ *       type: number
  *     responses:
  *       200:
  *         description: Folder todos list

@@ -57,6 +57,8 @@ const getOneFolderTodos = async (
 ) => {
   try {
     const { folderID } = req.params;
+    const page = req?.query?.page || 1;
+    const limit = req?.query?.limit || 10;
 
     validateMongoID({
       id: folderID,
@@ -71,11 +73,25 @@ const getOneFolderTodos = async (
       .populate("priority", "-__v")
       .populate("folder", "-__v -user -updatedAt -createdAt")
       .select("-__v -user")
+      .skip((+page - 1) * +limit)
+      .limit(+limit)
       .lean();
+
+    const totalDocuments = await TodoModel.countDocuments({
+      user: req.body?.user?._id,
+      folder: folderID,
+    }).lean();
 
     checkFalsyResult({ result });
 
-    res.json({ message: "folder todos list", result });
+    res.json({
+      message: "folder todos list",
+      page: +page,
+      limit: +limit,
+      totalDocuments,
+      totalPages: Math.ceil(totalDocuments / +limit),
+      result,
+    });
   } catch (error) {
     next(error);
   }
