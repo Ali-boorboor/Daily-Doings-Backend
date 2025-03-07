@@ -33,6 +33,27 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const search = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { subject } = req.query;
+
+    if (!subject?.length) {
+      next({ status: 422, message: "subject is required in request query" });
+    }
+
+    const searchResult = await TodoModel.find({
+      subject: { $regex: subject, $options: "i" },
+      user: req.body?.user?._id,
+    });
+
+    checkFalsyResult({ result: searchResult });
+
+    res.send({ message: "search result", searchResult });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const page = req?.query?.page || 1;
@@ -241,4 +262,13 @@ const remove = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { create, getAll, getOne, getRecent, getTodosOverview, edit, remove };
+export {
+  create,
+  search,
+  getAll,
+  getOne,
+  getRecent,
+  getTodosOverview,
+  edit,
+  remove,
+};

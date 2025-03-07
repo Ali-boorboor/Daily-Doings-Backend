@@ -4,6 +4,7 @@ import { validateReqBody } from "#/middlewares/validateRequest";
 import { postValidations, putValidations } from "#v/todosValidations.ts";
 import {
   create,
+  search,
   getAll,
   getOne,
   getRecent,
@@ -68,6 +69,31 @@ const todosRouter: any = express.Router();
 todosRouter
   .route("/")
   .post(authGuard, validateReqBody(postValidations), create);
+/**
+ * @swagger
+ * /todo/search:
+ *   get:
+ *     summary: Search todos based on their subject
+ *     description: Private Route Login To Access
+ *     tags:
+ *       - Todos 📃
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *     - name: subject
+ *       in: query
+ *       description: The todo subject
+ *       required: false
+ *       type: string
+ *     responses:
+ *       200:
+ *         description: Todos list
+ *       204:
+ *         description: No todo exists
+ *       500:
+ *         description: Internal Server Error - Something went wrong
+ */
+todosRouter.route("/search").get(authGuard, search);
 
 /**
  * @swagger
