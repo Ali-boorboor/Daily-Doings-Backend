@@ -1,9 +1,12 @@
 import fs from "fs";
 
 const removeFile = (fileAddress: string) => {
-  fs.unlink(fileAddress, (error) => {
-    throw error;
-  });
+  const isFileExists = fs.existsSync(fileAddress);
+  if (isFileExists) {
+    fs.unlink(fileAddress, (error) => {
+      throw error;
+    });
+  }
 };
 
 export default removeFile;

@@ -84,13 +84,15 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       sameSite: "strict",
     });
 
-    res.cookie("cover", process.env.FILE_ADDRESS + `/${user?.cover}`, {
-      maxAge: 864000000,
-      httpOnly: false,
-      secure: true,
-      signed: false,
-      sameSite: "strict",
-    });
+    if (user?.cover) {
+      res.cookie("cover", process.env.FILE_ADDRESS + `/${user?.cover}`, {
+        maxAge: 864000000,
+        httpOnly: false,
+        secure: true,
+        signed: false,
+        sameSite: "strict",
+      });
+    }
 
     res.cookie("username", user?.username, {
       maxAge: 864000000,

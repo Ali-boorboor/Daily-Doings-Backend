@@ -111,22 +111,20 @@ const changeCover = async (req: Request, res: Response, next: NextFunction) => {
     const userDetails = await UserModel.findOne({ _id: req.body?.user?._id });
 
     if (!userDetails) {
-      removeFile(path.join(__dirname, "../../public/covers", `${cover}`));
-
       throw { status: 404, message: "user not found" };
     }
 
     const isPasswordCorrect = comparePassword(password, userDetails?.password);
 
     if (!isPasswordCorrect) {
-      removeFile(path.join(__dirname, "../../public/covers", `${cover}`));
-
       throw { status: 401, message: "password is wrong" };
     }
 
-    removeFile(
-      path.join(__dirname, "../../public/covers", `${userDetails?.cover}`)
-    );
+    if (userDetails?.cover) {
+      removeFile(
+        path.join(__dirname, "../../public/covers", `${userDetails?.cover}`)
+      );
+    }
 
     await UserModel.findByIdAndUpdate(req.body?.user?._id, { cover });
 
