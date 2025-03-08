@@ -26,8 +26,8 @@ const todayTodosSchema = new mongoose.Schema(
     },
     expiresAt: {
       type: Date,
-      default: () => new Date(Date.now() + 24 * 60 * 60 * 1000),
-      index: { expires: 86400 },
+      default: () => new Date(),
+      expires: 86400,
     },
   },
   { timestamps: true }
