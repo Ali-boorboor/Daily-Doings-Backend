@@ -138,10 +138,6 @@ const changeCover = async (req: Request, res: Response, next: NextFunction) => {
 
     res.json({ message: "cover changed successfully" });
   } catch (error) {
-    const cover = req.file?.filename;
-
-    removeFile(path.join(__dirname, "../../public/covers", `${cover}`));
-
     next(error);
   }
 };

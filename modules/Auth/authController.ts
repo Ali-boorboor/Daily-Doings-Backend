@@ -20,8 +20,6 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
     ).lean();
 
     if (repeatedUser) {
-      removeFile(path.join(__dirname, "../../public/covers", `${cover}`));
-
       throw {
         status: 409,
         message: "user with this datas (email or username) already exists",
@@ -41,10 +39,6 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
 
     res.status(201).json({ message: "user signed up successfully", result });
   } catch (error) {
-    const cover = req.file?.filename;
-
-    removeFile(path.join(__dirname, "../../public/covers", `${cover}`));
-
     next(error);
   }
 };
