@@ -18,7 +18,7 @@ swaggerConfigs(app);
 // ! cors
 app.use(
   cors({
-    origin: "http://localhost:20000",
+    origin: "https://daily-doings.liara.run",
     credentials: true,
   })
 );

@@ -75,25 +75,23 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       httpOnly: true,
       secure: true,
       signed: true,
-      sameSite: "strict",
+      sameSite: "none",
     });
 
     if (user?.cover) {
       res.cookie("cover", process.env.FILE_ADDRESS + `/${user?.cover}`, {
         maxAge: 864000000,
-        httpOnly: false,
         secure: true,
-        signed: false,
-        sameSite: "strict",
+        sameSite: "none",
+        path: "/",
       });
     }
 
     res.cookie("username", user?.username, {
       maxAge: 864000000,
-      httpOnly: false,
       secure: true,
-      signed: false,
-      sameSite: "strict",
+      sameSite: "none",
+      path: "/",
     });
 
     res.json({ message: "logged in successfully" });

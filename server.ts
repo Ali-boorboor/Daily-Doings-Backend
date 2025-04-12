@@ -9,7 +9,7 @@ import "#c/DB.ts";
 app.use(notFound);
 app.use(errorCatcher);
 
-app.listen(process.env.PORT, (error) => {
+app.listen(+process.env.PORT!, "0.0.0.0", (error) => {
   if (error) console.log(error.message);
   else console.log(`# Listening on http://localhost:${process.env.PORT} ...`);
 });
