@@ -1,6 +1,4 @@
-import path from "path";
 import jwt from "jsonwebtoken";
-import removeFile from "#u/removeFile.ts";
 import UserModel from "#m/Users/UserModel.ts";
 import comparePassword from "#u/comparePassword.ts";
 import checkFalsyResult from "#u/checkFalsyResult.ts";
@@ -78,23 +76,13 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       sameSite: "none",
     });
 
-    if (user?.cover) {
-      res.cookie("cover", process.env.FILE_ADDRESS + `/${user?.cover}`, {
-        maxAge: 864000000,
-        secure: true,
-        sameSite: "none",
-        path: "/",
-      });
-    }
-
-    res.cookie("username", user?.username, {
-      maxAge: 864000000,
-      secure: true,
-      sameSite: "none",
-      path: "/",
+    res.json({
+      message: "logged in successfully",
+      data: {
+        username: user?.username,
+        cover: process.env.FILE_ADDRESS + `/${user?.cover}`,
+      },
     });
-
-    res.json({ message: "logged in successfully" });
   } catch (error) {
     next(error);
   }
